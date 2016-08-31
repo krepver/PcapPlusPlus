@@ -23,3 +23,15 @@ before_script:
 script:
   - cd Packet++Test
   - Bin/Packet++Test
+
+deploy:
+  provider: releases
+  api_key:
+    secure: u+96edHN+GrWP66f6rFPaxk1lmyH5SMSy7G9woKmmkgEra4HN16YLlZGW+koVkSAcKVFtwd6+Rx/BuP3cKA9LX3WvSTDIyrm8/O/CrllKmC85rd4unuCokGopQvudiiTq+UGXtpOJbVNI9lWc/6XYfCUPl4jvxGkhU+Yx44ETiS5wmN0CaD3zJvzI1QRxlJRuNuL0YkapRtZNpffWCLLIc6RjTRuUW8DbxlO2rzxZuU6VBaEADgTwrKrMMjwbhXsccoqpPu6ldZqakb88v8qPPlloOhAqAwDBSgbHJglrIxraYuIor0gqam6qu3Qh7E3HD5VnxXNu2n2OI4a+UX9171c1bCnRQB65/VSw95Mx2/Rku6XIZDBZIcAyK3kU7QSUf+LBEf+S9V57n0M7inKRALaOuWpQNx/seZk3TQgrgeRk9Kov+7LuSUt1StuteoVwW8hy3Vtriu8JG/ntfYyunTfYcRyfLlC8wIsuepSPAxbAHCpCR8Sj+iMYfgisL15tn3/Qr6mM5waSe7vNbN8PG0FqcEvC7OJsh9fOEKgdlOQJCwbh2Rusr81ABUJBUuRqBvPbsSXjj9o+/0rIwtwKdIcC/r8f03C4nUFPgVeuhCAjWehQtzB7ZZu1DN7nruMJfK197byZjU1LnG6O0uRFIruhOuFpfad8ZlTh2rolh8=
+  file: 
+    - Dist/Common++.a
+    - Dist/Packet++.a
+    - Dist/Pcap++.a
+  skip_cleanup: true
+  on:
+    repo: seladb/PcapPlusPlus-Doc
