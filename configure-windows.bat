@@ -23,14 +23,19 @@ if "%1" NEQ "" (
 :: if one of the modes returned with an error, exit script
 if "%ERRORLEVEL%" NEQ "0" exit /B 1
 
-:: verify that both variables MINGW_HOME and WINPCAP_HOME are set
+:: verify that both variables MINGW_HOME, WINPCAP_HOME, MSYS_HOME are set
 if "%MINGW_HOME%"=="" echo MinGW directory was not supplied. Exiting & exit /B 1
+if "%MSYS_HOME%"=="" echo MSYS/MSYS2 directory was not supplied. Exiting & exit /B 1
 if "%WINPCAP_HOME%"=="" echo WinPcap directory was not supplied. Exiting & exit /B 1
 
 :: replace "\" with "/" in MINGW_HOME
 set MINGW_HOME=%MINGW_HOME:\=/%
 :: remove trailing "/" in MINGW_HOME if exists
 if "%MINGW_HOME:~-1%"=="/" set MINGW_HOME=%MINGW_HOME:~,-1%
+:: replace "\" with "/" in MSYS_HOME
+set MSYS_HOME=%MSYS_HOME:\=/%
+:: remove trailing "/" in MSYS_HOME if exists
+if "%MSYS_HOME:~-1%"=="/" set MSYS_HOME=%MSYS_HOME:~,-1%
 :: replace "\" with "/" in WINPCAP_HOME
 set WINPCAP_HOME=%WINPCAP_HOME:\=/%
 :: remove trailing "/" in WINPCAP_HOME if exists
@@ -50,7 +55,7 @@ echo. >> %PCAPPLUSPLUS_MK%
 :: set MinGW and WinPcap locations in platform.mk.win32 and create platform.mk
 for /F "tokens=1* delims=]" %%A in ('type "mk\platform.mk.win32"') do (
 	echo. >>%PLATFORM_MK%
-	if "%%A" EQU "MINGW_HOME :=" (echo %%A %MINGW_HOME%>>%PLATFORM_MK%) else (if "%%A" EQU "WINPCAP_HOME :=" (echo %%A %WINPCAP_HOME%>>%PLATFORM_MK%) else (echo %%A>>%PLATFORM_MK%))
+	if "%%A" EQU "MINGW_HOME :=" (echo %%A %MINGW_HOME%>>%PLATFORM_MK%) else (if "%%A" EQU "MSYS_HOME :=" (echo %%A %MSYS_HOME%>>%PLATFORM_MK%) else (if "%%A" EQU "WINPCAP_HOME :=" (echo %%A %WINPCAP_HOME%>>%PLATFORM_MK%) else (echo %%A>>%PLATFORM_MK%)))
 )
 
 :: copy the content of PcapPlusPlus.mk.common to PcapPlusPlus.mk
@@ -125,6 +130,20 @@ goto GETOPT_START
 	:: exit ok
 	exit /B 0
 
+:: handling -s or --msys-home switches
+:CASE-s
+:CASE--msys-home
+	:: this argument must have a parameter. If no parameter was found goto GETOPT_REQUIRED_PARAM and exit
+	if "%2"=="" goto GETOPT_REQUIRED_PARAM %1
+	:: verify the MSYS dir supplied by the user exists. If not, exit with error code 3, meaning ask the caller to exit the script
+	if not exist %2\ call :GETOPT_ERROR "MSYS/MSYS2 directory '%2' does not exist" & exit /B 3
+	:: if all went well, set the MSYS_HOME variable with the directory given by the user
+	set MSYS_HOME=%2
+	:: notify GETOPT this switch has a parameter
+	set HAS_PARAM=1
+	:: exit ok
+	exit /B 0
+
 :: handling -w or --winpcap-home switches
 :CASE-w
 :CASE--winpcap-home
@@ -178,6 +197,19 @@ if not exist %MINGW_HOME%\ (echo Directory does not exist!! && goto while1)
 echo.
 echo.
 
+:: get MSYS location from user and verify it exists
+echo MSYS or MSYS2 are required for compiling PcapPlusPlus. 
+echo If MSYS/MSYS2 are not installed, please download and install it
+echo.
+:while3
+:: ask the user to type MSYS dir
+set /p MSYS_HOME=    Please specify MSYS/MSYS2 installed path: %=%
+:: if input dir doesn't exist print an error to the user and go back to previous line
+if not exist %MSYS_HOME%\ (echo Directory does not exist!! && goto while3)
+
+echo.
+echo.
+
 :: get WinPcap dev pack location from user and verify it exists
 echo WinPcap developer's pack is required for compiling PcapPlusPlus. 
 echo If WinPcap developer's pack is not installed, please download and install it from https://www.winpcap.org/devel.htm
@@ -187,8 +219,8 @@ echo.
 set /p WINPCAP_HOME=    Please specify WinPcap developer's pack installed path: %=%
 :: if input dir doesn't exist print an error to the user and go back to previous line
 if not exist %WINPCAP_HOME%\ (echo Directory does not exist!! && goto while2)
-
 :: both directories were read correctly, return to the caller
+
 exit /B 0
 
 
@@ -201,10 +233,11 @@ echo This script has 2 modes of operation:
 echo   1) Without any switches. In this case the script will guide you through using wizards
 echo   2) With switches, as described below
 echo.
-echo Basic usage: %~nx0 [-h] -m MINGW_HOME_DIR -w WINPCAP_HOME_DIR
+echo Basic usage: %~nx0 [-h] -m MINGW_HOME_DIR -s MSYS_HOME_DIR -w WINPCAP_HOME_DIR
 echo.
 echo The following switches are recognized:
 echo -m^|--mingw-home      --Sets MinGW home directory
+echo -s^|--msys-home       --Sets MSYS or MSYS2 home directory
 echo -w^|--winpcap-home    --Sets WinPcap home directory
 echo -h^|--help            --Displays this help message and exits. No further actions are performed
 echo.

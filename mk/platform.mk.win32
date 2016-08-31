@@ -2,7 +2,7 @@ WIN32 := 1
 
 MINGW_HOME :=
 
-MSYS_HOME := $(MINGW_HOME)/msys/1.0
+MSYS_HOME :=
 
 WINPCAP_HOME :=
 
