@@ -25,6 +25,8 @@ script:
   - Bin/Packet++Test
   - cd ..
 
+before_deploy: "ls -la"
+
 deploy:
   provider: bintray
   user: seladb
