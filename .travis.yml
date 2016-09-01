@@ -23,14 +23,3 @@ before_script:
 script:
   - cd Packet++Test
   - Bin/Packet++Test
-  - cd ../Dist
-
-before_deploy: "ls -la"
-
-deploy:
-  provider: bintray
-  user: seladb
-  key: '$BINTRAY_API_KEY'
-  file: header/ArpLayer.h
-  skip_cleanup: true
-  on: dev
