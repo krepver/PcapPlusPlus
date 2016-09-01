@@ -23,6 +23,7 @@ before_script:
 script:
   - cd Packet++Test
   - Bin/Packet++Test
+  - cd ..
 
 deploy:
   provider: bintray
