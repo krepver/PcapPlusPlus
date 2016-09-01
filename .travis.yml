@@ -30,8 +30,7 @@ before_deploy: "ls -la"
 deploy:
   provider: bintray
   user: seladb
-  key:
-    secure: T95PblmkIohcYYGZchYHvpUi2Ay9hNdyIqY9zrgFigv94HusTR6etzZVFAyUjeB+1IrRC8Nc+u3FWDU5BvGCmjc/RX5lyt/MM++/dBT1a1Mu2nmhzofWzSGWb+fHZAlQZQLYaocljX4GHbDeB4i9UY57eKpGLdgqihr2fCoo0z/hSsepYeKBMwYxn1kA7rj+T3HfDJKPckri0CcypkrF40fARJvqCB0CHk8qLJDrLRFuQkA6Avq0umrpsyM18D2f2dopwP9Sd8mUprYBxbo4bZnEIsc4HDMfL6vMc4t1RBt2F3H6vGRtQvGAX6WeMJIPZJKTxfN8DN0NJcx5c5m/V5kCvR2r60v/+7fsJVV1bgyy0ExxxwSwj8W28tDiAfo/CypLZw8L8VApldgVj1XhxQGeq3DgBmblwGIYJMTd97A1SqldjrjoBeTGatSr/7nU9N2Q4btKjs1amHv6MwZs+tUwSr5Y6YE6vaWUF2he9VeQmwhR4AVb/MMx1zuDC1vuXIpHHl1/7qxbVbEZjOjXSUE4mE/Gr+WqZPKc926AcxXkPqALfE5gAWMHuhhYraL1HpXrc6nUIRqHOp0Hpj9Mk+NqzQknU/ab3Qaw6WAhagh4NWgybE7Vgi/50WbPwjc3QP6cZu+g0BqVg7iI2rAuWs853KA3RX8ck4N4FBeY+GM=
-  file: libCommon++.a
+  key: '$BINTRAY_API_KEY'
+  file: header/ArpLayer.h
   skip_cleanup: true
   on: dev
