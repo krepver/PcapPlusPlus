@@ -23,7 +23,7 @@ before_script:
 script:
   - cd Packet++Test
   - Bin/Packet++Test
-  - cd ..
+  - cd ../Dist
 
 before_deploy: "ls -la"
 
